@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 keras = "*"
 tensorflow = "*"
+sanic = "*"
 
 [dev-packages]
 
