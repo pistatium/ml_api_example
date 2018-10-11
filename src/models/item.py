@@ -1,4 +1,4 @@
-from typing import NamedTuple
+from typing import Optional, NamedTuple
 
 
 class Item(NamedTuple):
@@ -7,4 +7,9 @@ class Item(NamedTuple):
     x3: int
     x4: int
     x5: int
-    y: int
+    y: Optional[int] = None
+
+    @classmethod
+    def from_dict(cls, d: dict):
+        return Item(**d)
+
