@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 from keras.models import Sequential, Model
 
@@ -26,8 +27,12 @@ if os.path.exists(MODEL_FILE_PATH):
     model.load(MODEL_FILE_PATH)
 
 
-def predict():
-    pass
+def predict(item: Item):
+    x, _ = item.to_vec()
+    y = model.evaluate(x)
+    return y 
+    
 
-def learn():
-    pass
+def learn(item: List[Item]):
+    x, _ = item.to_vec()
+    model.fit(x, y)
