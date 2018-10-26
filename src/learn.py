@@ -9,7 +9,7 @@ MODEL_FILE_PATH = 'model.h5'
 
 class ItemNet():
     model = Sequential()
-    model.add(Dense(5,  input_shape=(5,), use_bias=True, activation='sigmoid'))
+    model.add(Dense(5, input_shape=(5,), use_bias=True, activation='sigmoid'))
     model.add(Dropout(0.1))
     model.add(Dense(5, activation='sigmoid', use_bias=True))
     model.add(Dropout(0.1))
@@ -17,22 +17,28 @@ class ItemNet():
     return model
 
 
-model = ItemNet()
+def load_model():
+    model = ItemNet()
 
-model.compile(loss='mean_squared_error',
-    optimizer=RMSprop(),
-    metrics=['accuracy'])
+    model.compile(loss='mean_squared_error',
+        optimizer=RMSprop(),
+        metrics=['accuracy'])
 
-if os.path.exists(MODEL_FILE_PATH):
-    model.load(MODEL_FILE_PATH)
+    if os.path.exists(MODEL_FILE_PATH):
+        model.load(MODEL_FILE_PATH)
+    return model
 
 
-def predict(item: Item):
+def predict_item(item: Item):
+    model = load_model()
     x, _ = item.to_vec()
     y = model.evaluate(x)
-    return y 
-    
+    return y
 
-def learn(item: List[Item]):
-    x, _ = item.to_vec()
+
+def learn_item(item: List[Item]):
+    # FIXME: Concurrency
+    model = load_model()
+    x, y = item.to_vec()
     model.fit(x, y)
+    model.save(MODEL_FILE_PATH)
