@@ -1,7 +1,10 @@
 import os
 from typing import List
 
-from keras.models import Sequential, Model
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+
+from models.item import Item
 
 
 MODEL_FILE_PATH = 'model.h5'
@@ -14,7 +17,6 @@ class ItemNet():
     model.add(Dense(5, activation='sigmoid', use_bias=True))
     model.add(Dropout(0.1))
     model.add(Dense(1, activation='linear', use_bias=True))
-    return model
 
 
 def load_model():
