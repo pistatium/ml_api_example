@@ -1,8 +1,10 @@
 import os
 from typing import List
 
-from keras.models import Sequential
+from keras.optimizers import RMSprop
+from keras.models import Sequential, load_model
 from keras.layers import Dense, Dropout
+import numpy as np
 
 from models.item import Item
 
@@ -10,24 +12,23 @@ from models.item import Item
 MODEL_FILE_PATH = 'model.h5'
 
 
-class ItemNet():
+def ItemNet():
     model = Sequential()
     model.add(Dense(5, input_shape=(5,), use_bias=True, activation='sigmoid'))
     model.add(Dropout(0.1))
     model.add(Dense(5, activation='sigmoid', use_bias=True))
     model.add(Dropout(0.1))
     model.add(Dense(1, activation='linear', use_bias=True))
+    return model
 
 
 def load_model():
+    if os.path.exists(MODEL_FILE_PATH):
+        return load_model(MODEL_FILE_PATH)
     model = ItemNet()
-
     model.compile(loss='mean_squared_error',
         optimizer=RMSprop(),
         metrics=['accuracy'])
-
-    if os.path.exists(MODEL_FILE_PATH):
-        model.load(MODEL_FILE_PATH)
     return model
 
 
@@ -42,5 +43,5 @@ def learn_item(item: List[Item]):
     # FIXME: Concurrency
     model = load_model()
     x, y = item.to_vec()
-    model.fit(x, y)
+    model.fit(np.array([x]), np.array([y]))
     model.save(MODEL_FILE_PATH)
