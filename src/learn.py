@@ -1,6 +1,7 @@
 import os
 from typing import List
 
+
 from keras.optimizers import RMSprop
 from keras.models import Sequential, load_model
 from keras.layers import Dense, Dropout
@@ -22,7 +23,7 @@ def ItemNet():
     return model
 
 
-def load_model():
+def get_model():
     if os.path.exists(MODEL_FILE_PATH):
         return load_model(MODEL_FILE_PATH)
     model = ItemNet()
@@ -33,15 +34,15 @@ def load_model():
 
 
 def predict_item(item: Item):
-    model = load_model()
+    model = get_model()
     x, _ = item.to_vec()
-    y = model.evaluate(x)
-    return y
+    y = model.predict(np.array([x]))
+    return float(y[0])
 
 
 def learn_item(item: List[Item]):
     # FIXME: Concurrency
-    model = load_model()
+    model = get_model()
     x, y = item.to_vec()
     model.fit(np.array([x]), np.array([y]))
     model.save(MODEL_FILE_PATH)
