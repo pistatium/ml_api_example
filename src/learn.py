@@ -15,11 +15,11 @@ MODEL_FILE_PATH = 'model.h5'
 
 def ItemNet():
     model = Sequential()
-    model.add(Dense(5, input_shape=(5,), use_bias=True, activation='sigmoid'))
+    model.add(Dense(10, input_shape=(5,), use_bias=True, activation='relu'))
     model.add(Dropout(0.1))
-    model.add(Dense(5, activation='sigmoid', use_bias=True))
+    model.add(Dense(5, activation='relu', use_bias=True))
     model.add(Dropout(0.1))
-    model.add(Dense(1, activation='linear', use_bias=True))
+    model.add(Dense(1))
     return model
 
 
@@ -28,8 +28,7 @@ def get_model():
         return load_model(MODEL_FILE_PATH)
     model = ItemNet()
     model.compile(loss='mean_squared_error',
-        optimizer=RMSprop(),
-        metrics=['accuracy'])
+        optimizer=RMSprop())
     return model
 
 
